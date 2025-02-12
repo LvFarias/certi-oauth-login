@@ -5,8 +5,25 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 		<title>RemoteID - Code</title>
+		<script>
+	        function getUrlParams() {
+	            const params = new URLSearchParams(window.location.search);
+	            let paramsText = '';
+	            params.forEach((value, key) => {
+	                paramsText += `${key}: ${value}\n`;
+	            });
+	            return paramsText;
+	        }
+	
+	        function renderParams() {
+	            const paramsText = getUrlParams();
+	            document.getElementById('params').innerText = paramsText;
+	        }
+	
+	        window.onload = renderParams;
+	    </script>
 	</head>
 	<body>
-		<h1>Teste</h1>
+		<h1 id="params" style="white-space: pre-wrap;"></h1>
 	</body>
 </html>
