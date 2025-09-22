@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Informações do Usuário</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				font-family: Roboto;
+				box-sizing: border-box;
+			}
+			body {
+				display: flex;
+				width: 100dvw;
+				height: 100dvh;
+				align-items: center;
+				background-size: cover;
+				justify-content: center;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-image: url('../assets/backgroud.png');
+			}
+			.info-card {
+				gap: 1.5rem;
+				width: 400px;
+				padding: 2rem;
+				display: flex;
+				max-width: 90dvw;
+				border-radius: 1rem;
+				background: #ecfefd;
+				flex-direction: column;
+				animation: fadeIn 1s ease;
+				box-shadow: 0 0.5rem 1.5rem rgba(14, 1, 20, 0.5);
+			}
+			.info-card h1 {
+				color: #0e0114;
+				margin-bottom: 1rem;
+				text-align: center;
+			}
+			.info-item {
+				font-size: 1.1rem;
+			}
+			.info-item strong {
+				color: #8a05be;
+			}
+			#loading,
+			#error {
+				text-align: center;
+				font-size: 1.2rem;
+				color: #0e0114;
+			}
+			#error {
+				color: #d93025;
+			}
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+		</style>
+		<script>
+			function maskCPF(cpf) {
+				if (!cpf || typeof cpf !== 'string') return '';
+				const digitsOnly = cpf.replace(/\D/g, '');
+				return digitsOnly.replace(
+					/(\d{3})(\d{3})(\d{3})(\d{2})/,
+					'$1.$2.$3-$4'
+				);
+			}
+
+			window.onload = async function () {
+				const errorDiv = document.getElementById('error');
+				const loadingDiv = document.getElementById('loading');
+				const userInfoDiv = document.getElementById('userInfo');
+
+				const params = new URLSearchParams(window.location.search);
+				const code = params.get('code');
+
+				if (!code) {
+                    loadingDiv.style.display = 'none';
+					errorDiv.textContent = 'Erro: Código de autorização não encontrado.';
+					errorDiv.style.display = 'block';
+					return;
+				}
+
+				try {
+					// const tokenUrl = new URL('https://remote-api-hmg.certisign.com.br/api/v1/oauth/token');
+					const tokenUrl = new URL('https://remoteidcertisign-homolog.com.br/api/v0/oauth/token');
+					tokenUrl.searchParams.append('code', code);
+					tokenUrl.searchParams.append('code_verifier', '1234');
+					tokenUrl.searchParams.append(
+						'grant_type',
+						'authorization_code'
+					);
+					tokenUrl.searchParams.append(
+						'client_id',
+						'66977973-f4a2-4644-8c00-579f9c1d30ae'
+					);
+					tokenUrl.searchParams.append(
+						'client_secret',
+						encodeURI('anNtK5j2H2fUwxt0wxiSBNf7nsGV/ZFQ')
+					);
+
+					const tokenResponse = await fetch(tokenUrl.toString(), {
+						method: 'POST',
+					});
+
+					if (!tokenResponse.ok) {
+						throw new Error(
+							`Erro ao obter token: ${tokenResponse.statusText}`
+						);
+					}
+
+					const tokenData = await tokenResponse.json();
+					const accessToken = tokenData.access_token;
+
+					const userInfo = {
+						cpf:
+							tokenData.authorized_identification ||
+							'CPF não encontrado',
+					};
+
+					localStorage.setItem('userCPF', userInfo.cpf);
+
+					window.location.href = '/home';
+				} catch (err) {
+					loadingDiv.style.display = 'none';
+					errorDiv.textContent = `Falha ao buscar informações: ${err.message}`;
+					errorDiv.style.display = 'block';
+					console.error(err);
+				}
+			};
+		</script>
+	</head>
+	<body>
+		<div class="info-card">
+			<h1>Suas Informações</h1>
+			<div id="loading">Carregando informações...</div>
+			<div id="userInfo" style="display: none">
+				<div class="info-item" style="flex-direction: column">
+					<strong>Você está logado com o CPF:</strong>
+					<span id="userCPF"></span>
+				</div>
+			</div>
+			<div id="error" style="display: none"></div>
+		</div>
+	</body>
+</html>

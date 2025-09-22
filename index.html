@@ -1,29 +1,127 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="pt-BR">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-		<title>RemoteID - Code</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Login</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				font-family: Roboto;
+				box-sizing: border-box;
+			}
+			body {
+				display: flex;
+				width: 100dvw;
+				height: 100dvh;
+				align-items: center;
+				background-size: cover;
+				justify-content: center;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-image: url('assets/backgroud.png');
+			}
+			.login-card {
+				gap: 1rem;
+				width: 360px;
+				padding: 2rem;
+				display: flex;
+    			max-width: 90dvw;
+				align-items: center;
+				border-radius: 1rem;
+				background: #ecfefd;
+				flex-direction: column;
+				animation: fadeIn 1s ease;
+				box-shadow: 0 0.5rem 1.5rem rgba(14, 1, 20, 0.5);
+			}
+			.login-card h1 {
+				color: #0e0114;
+				margin-bottom: 1rem;
+			}
+			.login-card input {
+				width: 100%;
+				outline: none;
+				padding: 0.5rem;
+				font-size: 1rem;
+				color: #0e0114;
+				border-style: solid;
+				background: transparent;
+				border-color: #0abab5;
+				border-width: 0px 0px 2px 0;
+			}
+			.login-card button {
+				width: 100%;
+				border: none;
+				padding: 0.5rem;
+				cursor: pointer;
+				font-size: 0.9rem;
+				border-radius: 0.5rem;
+				transition: background 0.3s;
+			}
+			.btn-login {
+				color: #ecfefd;
+				background: #0abab5;
+			}
+			.btn-login:hover {
+				background: #089f9a;
+			}
+			.forgot {
+				cursor: pointer;
+				color: #0e0114;
+				font-size: 0.75rem;
+				align-self: flex-end;
+				text-decoration: underline;
+			}
+			.btn-cloud {
+				color: #ecfefd;
+				background: #8a05be;
+			}
+			.btn-cloud:hover {
+				background: #6b0495;
+			}
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+		</style>
 		<script>
-	        function getUrlParams() {
-	            const params = new URLSearchParams(window.location.search);
-	            let paramsText = '';
-	            params.forEach((value, key) => {
-	                paramsText += `${key}: ${value}\n`;
-	            });
-	            return paramsText;
-	        }
-	
-	        function renderParams() {
-	            const paramsText = getUrlParams();
-	            document.getElementById('params').innerText = paramsText;
-	        }
-	
-	        window.onload = renderParams;
-	    </script>
+			function openOauthLogin() {
+				const baseUrl = 'https://remote-api-hmg.certisign.com.br/api/v1/oauth/authorize';
+				const params = new URLSearchParams({
+					state: 'login_info',
+					response_type: 'code',
+					scope: 'signature_session',
+					code_challenge_method: 'S256',
+					client_id: '66977973-f4a2-4644-8c00-579f9c1d30ae',
+					code_challenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
+					redirect_uri: `https://lvfarias.github.io/certi-oauth-login//oauth-callback`,
+				});
+
+				window.open(`${baseUrl}?${params.toString()}`, '_self');
+			}
+		</script>
 	</head>
 	<body>
-		<h1 id="params" style="white-space: pre-wrap;"></h1>
+		<div class="login-card">
+			<h1>Login</h1>
+			<input type="email" placeholder="Email" />
+			<input type="password" placeholder="Senha" />
+			<div class="forgot">Esqueci a senha</div>
+			<button class="btn-login">Entrar</button>
+			<button onclick="openOauthLogin()" class="btn-cloud">
+				Login com Certisign
+			</button>
+		</div>
 	</body>
 </html>

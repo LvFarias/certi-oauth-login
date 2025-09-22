@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Home</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				font-family: Roboto;
+				box-sizing: border-box;
+			}
+			body {
+				display: flex;
+				width: 100dvw;
+				height: 100dvh;
+				align-items: center;
+				background-size: cover;
+				justify-content: center;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-image: url('../assets/backgroud.png');
+			}
+			.home-card {
+				gap: 1.5rem;
+				width: 450px;
+				padding: 2rem;
+				display: flex;
+				max-width: 90dvw;
+				text-align: center;
+				border-radius: 1rem;
+				background: #ecfefd;
+				flex-direction: column;
+				animation: fadeIn 1s ease;
+				box-shadow: 0 0.5rem 1.5rem rgba(14, 1, 20, 0.5);
+			}
+			.home-card h1 {
+				color: #0e0114;
+				margin-bottom: 1rem;
+			}
+			.info-text {
+				font-size: 1.2rem;
+				color: #0e0114;
+			}
+			.info-text strong {
+				color: #8a05be;
+				font-size: 1.3rem;
+				display: block;
+				margin-top: 0.5rem;
+			}
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="home-card">
+			<h1>Bem-vindo!</h1>
+			<div id="userInfo" class="info-text">
+				Você está logado com o CPF:
+				<strong id="userCPF"></strong>
+			</div>
+		</div>
+
+		<script>
+			function maskCPF(cpf) {
+				if (!cpf || typeof cpf !== 'string') return 'CPF não encontrado';
+				const digitsOnly = cpf.replace(/\D/g, '');
+				return digitsOnly.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+			}
+
+			window.onload = function () {
+				const userCPF = localStorage.getItem('userCPF');
+				const cpfSpan = document.getElementById('userCPF');
+
+				cpfSpan.textContent = maskCPF(userCPF);
+			};
+		</script>
+	</body>
+</html>
