@@ -133,7 +133,7 @@
 
 					localStorage.setItem('userCPF', userInfo.cpf);
 
-					window.location.href = '/home';
+					window.location.href = '/certi-oauth-login/home';
 				} catch (err) {
 					loadingDiv.style.display = 'none';
 					errorDiv.textContent = `Falha ao buscar informações: ${err.message}`;
