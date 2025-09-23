@@ -79,6 +79,20 @@
 				);
 			}
 
+			function decodeJWT(token) {
+				try {
+					const base64Url = token.split('.')[1];
+					const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+					const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+						return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+					}).join(''));
+					return JSON.parse(jsonPayload);
+				} catch (e) {
+					console.error("Erro ao decodificar JWT:", e);
+					return null;
+				}
+			}
+
 			window.onload = async function () {
 				const errorDiv = document.getElementById('error');
 				const loadingDiv = document.getElementById('loading');
@@ -95,8 +109,8 @@
 				}
 
 				try {
-					// const tokenUrl = new URL('https://remote-api-hmg.certisign.com.br/api/v1/oauth/token');
-					const tokenUrl = new URL('https://remoteidcertisign-homolog.com.br/api/v0/oauth/token');
+					const tokenUrl = new URL('https://remote-api-hmg.certisign.com.br/api/v1/oauth/token');
+					// const tokenUrl = new URL('https://remoteidcertisign-homolog.com.br/api/v0/oauth/token');
 					tokenUrl.searchParams.append('code', code);
 					tokenUrl.searchParams.append('code_verifier', '1234');
 					tokenUrl.searchParams.append(
@@ -123,15 +137,11 @@
 					}
 
 					const tokenData = await tokenResponse.json();
-					const accessToken = tokenData.access_token;
+					const decodedToken = decodeJWT(tokenData.access_token);
 
-					const userInfo = {
-						cpf:
-							tokenData.authorized_identification ||
-							'CPF não encontrado',
-					};
-
-					localStorage.setItem('userCPF', userInfo.cpf);
+					localStorage.setItem('userName', decodedToken.userName || 'Nome não encontrado');
+					localStorage.setItem('userDocument', decodedToken.userDocument || 'Documento não encontrado');
+					localStorage.setItem('userEmail', decodedToken.userEmail || 'Email não encontrado');
 
 					window.location.href = '/certi-oauth-login/home';
 				} catch (err) {

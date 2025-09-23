@@ -55,6 +55,16 @@
 				display: block;
 				margin-top: 0.5rem;
 			}
+			.user-details {
+				gap: 1rem;
+				display: flex;
+				margin-top: 1rem;
+				text-align: left;
+				flex-direction: column;
+			}
+			.detail-item {
+				font-size: 1.1rem;
+			}
 			@keyframes fadeIn {
 				from {
 					opacity: 0;
@@ -67,10 +77,14 @@
 	</head>
 	<body>
 		<div class="home-card">
-			<h1>Bem-vindo!</h1>
-			<div id="userInfo" class="info-text">
-				Você está logado com o CPF:
-				<strong id="userCPF"></strong>
+			<h1 id="welcomeMessage"></h1>
+			<div class="info-text">
+				Infos do seu usuário:
+				<div class="user-details">
+					<div class="detail-item"><strong>Nome:</strong> <span id="userName"></span></div>
+					<div class="detail-item"><strong>CPF:</strong> <span id="userDocument"></span></div>
+					<div class="detail-item"><strong>Email:</strong> <span id="userEmail"></span></div>
+				</div>
 			</div>
 		</div>
 
@@ -82,10 +96,19 @@
 			}
 
 			window.onload = function () {
-				const userCPF = localStorage.getItem('userCPF');
-				const cpfSpan = document.getElementById('userCPF');
+				const userName = localStorage.getItem('userName') || 'Usuário';
+				const userDocument = localStorage.getItem('userDocument');
+				const userEmail = localStorage.getItem('userEmail');
 
-				cpfSpan.textContent = maskCPF(userCPF);
+				const welcomeMessageEl = document.getElementById('welcomeMessage');
+				const userNameEl = document.getElementById('userName');
+				const userDocumentEl = document.getElementById('userDocument');
+				const userEmailEl = document.getElementById('userEmail');
+
+				welcomeMessageEl.textContent = `Olá ${userName}, seja bem-vindo.`;
+				userNameEl.textContent = userName;
+				userDocumentEl.textContent = maskCPF(userDocument);
+				userEmailEl.textContent = userEmail || 'Não informado';
 			};
 		</script>
 	</body>
