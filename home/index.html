@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 	<head>
 		<meta charset="UTF-8" />
@@ -65,6 +65,9 @@
 			.detail-item {
 				font-size: 1.1rem;
 			}
+			.detail-item img {
+				width: 50px;
+			}
 			@keyframes fadeIn {
 				from {
 					opacity: 0;
@@ -77,38 +80,226 @@
 	</head>
 	<body>
 		<div class="home-card">
-			<h1 id="welcomeMessage"></h1>
 			<div class="info-text">
-				Infos do seu usuário:
-				<div class="user-details">
-					<div class="detail-item"><strong>Nome:</strong> <span id="userName"></span></div>
-					<div class="detail-item"><strong>CPF:</strong> <span id="userDocument"></span></div>
-					<div class="detail-item"><strong>Email:</strong> <span id="userEmail"></span></div>
+				Validando oauth:
+				<div class="oauth-details">
+					<div class="detail-item">
+						<strong>UserId:</strong> <span id="userId"></span>
+					</div>
+					<div class="detail-item">
+						<strong>Document:</strong>
+						<span id="userDocument"></span>
+					</div>
+					<div class="detail-item">
+						<strong>ContextId:</strong> <span id="contextId"></span>
+					</div>
+					<div class="detail-item">
+						<strong>CertificateId:</strong>
+						<span id="certificateId"></span>
+					</div>
+					<div class="detail-item">
+						<strong>Recuperando Certificado:</strong>
+						<img
+							id="certificate-loading"
+							src="../assets/loading.svg"
+						/>
+						<span id="certificate-detail"></span>
+					</div>
+					<div class="detail-item">
+						<strong>Assinando Documento:</strong>
+						<img
+							id="signature-loading"
+							src="../assets/loading.svg"
+						/>
+						<span id="signature-detail"></span>
+					</div>
+					<div class="detail-item">
+						<strong>Validando Assinatura:</strong>
+						<img
+						id="validate-loading"
+						src="../assets/loading.svg"
+						/>
+						<span id="validate-detail"></span>
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<script>
-			function maskCPF(cpf) {
-				if (!cpf || typeof cpf !== 'string') return 'CPF não encontrado';
-				const digitsOnly = cpf.replace(/\D/g, '');
-				return digitsOnly.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+			function getCertificate(token) {
+				XHR = new XMLHttpRequest();
+				XHR.open(
+					'GET',
+					'https://remoteidcertisign-homolog.com.br/api/emr-digital-signature/certificate',
+					true,
+				);
+				XHR.setRequestHeader('Authorization', 'Bearer ' + token);
+				XHR.send();
+				XHR.onreadystatechange = function () {
+					if (XHR.readyState == 4) {
+						if (XHR.status == 200) {
+							const certificate = JSON.parse(XHR.responseText);
+							document.getElementById(
+								'certificate-loading',
+							).style.display = 'none';
+							document.getElementById(
+								'certificate-detail',
+							).innerHTML = `
+								Nome: ${certificate?.name}<br>
+								Document: ${certificate?.cpf}<br>
+								Emissor: ${certificate?.issuer}<br>
+								Número de Série: ${certificate?.serial_number}<br>
+								Válido de: ${certificate?.valid_from}<br>
+								Válido até: ${certificate?.valid_to}
+							`;
+							document.getElementById(
+								'certificate-detail',
+							).style.display = 'block';
+						} else {
+							document.getElementById(
+								'certificate-loading',
+							).style.display = 'none';
+							document.getElementById(
+								'certificate-detail',
+							).textContent = "Erro ao recuperar o certificado";
+							document.getElementById(
+								'certificate-detail',
+							).style.display = 'block';
+						}
+					}
+				};
+			}
+
+			function signingDocument(token) {
+				XHR = new XMLHttpRequest();
+				XHR.open(
+					'POST',
+					'https://remoteidcertisign-homolog.com.br/api/emr-digital-signature/signature',
+					true,
+				);
+				XHR.setRequestHeader('Authorization', 'Bearer ' + token);
+				var body = {
+					signature_format: 'DETACHED',
+					signature_policy: 'CMS',
+					hash_algorithm: '2.16.840.1.101.3.4.2.1',
+					timezone: '-03:00UTC',
+					hashes: [
+						{
+							id: 'Hello World',
+							hash: 'pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=',
+						},
+					],
+				};
+				XHR.send(JSON.stringify(body));
+				XHR.onreadystatechange = function () {
+					if (XHR.readyState == 4) {
+						if (XHR.status == 200) {
+							const result = JSON.parse(XHR.responseText);
+							document.getElementById(
+								'signature-loading',
+							).style.display = 'none';
+							document.getElementById(
+								'signature-detail',
+							).innerHTML = `
+								${result?.message}<br>
+								Assinado com: ${result?.certificate_alias}<br>
+								Documento: ${result?.signatures?.[0]?.id}
+							`;
+							document.getElementById(
+								'signature-detail',
+							).style.display = 'block';
+							validadeSignature(result?.signatures?.[0]?.raw_signature);
+						} else {
+							document.getElementById(
+								'signature-loading',
+							).style.display = 'none';
+							document.getElementById(
+								'signature-detail',
+							).textContent = "Erro ao assinar o documento";
+							document.getElementById(
+								'signature-detail',
+							).style.display = 'block';
+							document.getElementById(
+								'validate-loading',
+							).style.display = 'none';
+							document.getElementById(
+								'validate-detail',
+							).textContent = "Validação de assinatura não realizada";
+							document.getElementById(
+								'validate-detail',
+							).style.display = 'block';
+						}
+					}
+				};
+			}
+
+			function validadeSignature(raw_signature) {
+				XHR = new XMLHttpRequest();
+				XHR.open(
+					'POST',
+					'https://remoteidcertisign-homolog.com.br/api/emr-digital-signature/validate',
+					true,
+				);
+				var body = {
+					client_id: '66977973-f4a2-4644-8c00-579f9c1d30ae',
+					signature_format: 'DETACHED',
+					signature_policy: 'CMS',
+					hash_algorithm: '2.16.840.1.101.3.4.2.1',
+					timezone: '-03:00UTC',
+					hashes: [
+						{
+							raw_signature,
+							id: 'Hello World',
+							hash: 'SGVsbG8gV29ybGQ=',
+						},
+					],
+				};
+				XHR.send(JSON.stringify(body));
+				XHR.onreadystatechange = function () {
+					if (XHR.readyState == 4) {
+						if (XHR.status == 200) {
+							const result = JSON.parse(XHR.responseText);
+							document.getElementById(
+								'validate-loading',
+							).style.display = 'none';
+							document.getElementById('validate-detail').textContent =
+								`
+								${result?.status == 'SUCCESS' ? 'Assinatura válidada com sucesso' : 'Erro ao validar assinatura'}
+							`;
+							document.getElementById(
+								'validate-detail',
+							).style.display = 'block';
+						} else {
+							document.getElementById(
+								'validate-loading',
+							).style.display = 'none';
+							document.getElementById(
+								'validate-detail',
+							).textContent = "Erro ao validar assinatura";
+							document.getElementById(
+								'validate-detail',
+							).style.display = 'block';
+						}
+					}
+				};
 			}
 
 			window.onload = function () {
-				const userName = localStorage.getItem('userName') || 'Usuário';
-				const userDocument = localStorage.getItem('userDocument');
-				const userEmail = localStorage.getItem('userEmail');
+				const userInfos = JSON.parse(
+					localStorage.getItem('userInfos') || '{}',
+				);
 
-				const welcomeMessageEl = document.getElementById('welcomeMessage');
-				const userNameEl = document.getElementById('userName');
-				const userDocumentEl = document.getElementById('userDocument');
-				const userEmailEl = document.getElementById('userEmail');
+				document.getElementById('userId').textContent =
+					userInfos.userId;
+				document.getElementById('userDocument').textContent =
+					userInfos.cpf;
+				document.getElementById('contextId').textContent =
+					userInfos.contextId;
+				document.getElementById('certificateId').textContent =
+					userInfos.certificateId;
 
-				welcomeMessageEl.textContent = `Olá ${userName}, seja bem-vindo.`;
-				userNameEl.textContent = userName;
-				userDocumentEl.textContent = maskCPF(userDocument);
-				userEmailEl.textContent = userEmail || 'Não informado';
+				getCertificate(userInfos.token);
+				signingDocument(userInfos.token);
 			};
 		</script>
 	</body>

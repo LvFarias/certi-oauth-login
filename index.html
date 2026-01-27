@@ -97,7 +97,7 @@
 		</style>
 		<script>
 			function openOauthLogin() {
-				const baseUrl = 'https://remote-api-hmg.certisign.com.br/api/v1/oauth/authorize';
+				const baseUrl = 'https://remoteidcertisign-homolog.com.br/api/v0/oauth/authorize';
 				const params = new URLSearchParams({
 					state: 'login_info',
 					response_type: 'code',
@@ -105,7 +105,7 @@
 					code_challenge_method: 'S256',
 					client_id: '66977973-f4a2-4644-8c00-579f9c1d30ae',
 					code_challenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
-					redirect_uri: `https://lvfarias.github.io/certi-oauth-login//oauth-callback`,
+					redirect_uri: `https://lvfarias.github.io/certi-oauth-login/oauth-callback`,
 				});
 
 				window.open(`${baseUrl}?${params.toString()}`, '_self');
