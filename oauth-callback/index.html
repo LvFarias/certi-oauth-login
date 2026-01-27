@@ -70,15 +70,6 @@
 			}
 		</style>
 		<script>
-			function maskCPF(cpf) {
-				if (!cpf || typeof cpf !== 'string') return '';
-				const digitsOnly = cpf.replace(/\D/g, '');
-				return digitsOnly.replace(
-					/(\d{3})(\d{3})(\d{3})(\d{2})/,
-					'$1.$2.$3-$4'
-				);
-			}
-
 			function decodeToken(token) {
 				var values = token.split(';');
 
@@ -94,7 +85,6 @@
 			window.onload = async function () {
 				const errorDiv = document.getElementById('error');
 				const loadingDiv = document.getElementById('loading');
-				const userInfoDiv = document.getElementById('userInfo');
 
 				const params = new URLSearchParams(window.location.search);
 				const code = params.get('code');
@@ -107,20 +97,21 @@
 				}
 
 				try {
-					const tokenUrl = new URL('https://remoteidcertisign-homolog.com.br/api/v0/oauth/token');
+					const vars = JSON.parse(localStorage.getItem('envVars') || '{}');
+					const tokenUrl = new URL(`${vars.baseUrl}/api/v0/oauth/token`);
 					tokenUrl.searchParams.append('code', code);
-					tokenUrl.searchParams.append('code_verifier', '1234');
+					tokenUrl.searchParams.append('code_verifier', vars.codeVerifier);
 					tokenUrl.searchParams.append(
 						'grant_type',
 						'authorization_code'
 					);
 					tokenUrl.searchParams.append(
 						'client_id',
-						'66977973-f4a2-4644-8c00-579f9c1d30ae'
+						vars.clientId
 					);
 					tokenUrl.searchParams.append(
 						'client_secret',
-						encodeURI('anNtK5j2H2fUwxt0wxiSBNf7nsGV/ZFQ')
+						encodeURI(vars.clientSecret)
 					);
 
 					const tokenResponse = await fetch(tokenUrl.toString(), {
@@ -152,12 +143,6 @@
 		<div class="info-card">
 			<h1>Suas Informações</h1>
 			<div id="loading">Carregando informações...</div>
-			<div id="userInfo" style="display: none">
-				<div class="info-item" style="flex-direction: column">
-					<strong>Você está logado com o CPF:</strong>
-					<span id="userCPF"></span>
-				</div>
-			</div>
 			<div id="error" style="display: none"></div>
 		</div>
 	</body>

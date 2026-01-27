@@ -127,10 +127,13 @@
 
 		<script>
 			function getCertificate(token) {
+				const vars = JSON.parse(
+					localStorage.getItem('envVars') || '{}',
+				);
 				XHR = new XMLHttpRequest();
 				XHR.open(
 					'GET',
-					'https://remoteidcertisign-homolog.com.br/api/emr-digital-signature/certificate',
+					`${vars.baseUrl}/api/emr-digital-signature/certificate`,
 					true,
 				);
 				XHR.setRequestHeader('Authorization', 'Bearer ' + token);
@@ -171,10 +174,13 @@
 			}
 
 			function signingDocument(token) {
+				const vars = JSON.parse(
+					localStorage.getItem('envVars') || '{}',
+				);
 				XHR = new XMLHttpRequest();
 				XHR.open(
 					'POST',
-					'https://remoteidcertisign-homolog.com.br/api/emr-digital-signature/signature',
+					`${vars.baseUrl}/api/emr-digital-signature/signature`,
 					true,
 				);
 				XHR.setRequestHeader('Authorization', 'Bearer ' + token);
@@ -234,14 +240,17 @@
 			}
 
 			function validadeSignature(raw_signature) {
+				const vars = JSON.parse(
+					localStorage.getItem('envVars') || '{}',
+				);
 				XHR = new XMLHttpRequest();
 				XHR.open(
 					'POST',
-					'https://remoteidcertisign-homolog.com.br/api/emr-digital-signature/validate',
+					`${vars.baseUrl}/api/emr-digital-signature/validate`,
 					true,
 				);
 				var body = {
-					client_id: '66977973-f4a2-4644-8c00-579f9c1d30ae',
+					client_id: vars.clientId,
 					signature_format: 'DETACHED',
 					signature_policy: 'CMS',
 					hash_algorithm: '2.16.840.1.101.3.4.2.1',

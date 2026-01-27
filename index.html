@@ -96,19 +96,37 @@
 			}
 		</style>
 		<script>
-			function openOauthLogin() {
-				const baseUrl = 'https://remoteidcertisign-homolog.com.br/api/v0/oauth/authorize';
+			const VARS = {
+				hml: {
+					baseUrl: 'https://remoteidcertisign-homolog.com.br',
+					clientId: '66977973-f4a2-4644-8c00-579f9c1d30ae',
+					clientSecret: 'anNtK5j2H2fUwxt0wxiSBNf7nsGV/ZFQ',
+					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
+					codeVerifier: '1234',
+				},
+				prod: {
+					baseUrl: 'https://remoteidcertisign.com.br',
+					clientId: '66977973-f4a2-4644-8c00-579f9c1d30ae',
+					clientSecret: 'anNtK5j2H2fUwxt0wxiSBNf7nsGV/ZFQ',
+					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
+					codeVerifier: '1234',
+				}
+			}
+
+			function openOauthLogin(env) {
+				localStorage.setItem('envVars', JSON.stringify(VARS[env]));
+				const url = `${VARS[env].baseUrl}/api/v0/oauth/authorize`;
 				const params = new URLSearchParams({
 					state: 'login_info',
 					response_type: 'code',
 					scope: 'signature_session',
 					code_challenge_method: 'S256',
-					client_id: '66977973-f4a2-4644-8c00-579f9c1d30ae',
-					code_challenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
+					client_id: VARS[env].clientId,
+					code_challenge: VARS[env].codeChallenge,
 					redirect_uri: `https://lvfarias.github.io/certi-oauth-login/oauth-callback`,
 				});
 
-				window.open(`${baseUrl}?${params.toString()}`, '_self');
+				window.open(`${url}?${params.toString()}`, '_self');
 			}
 		</script>
 	</head>
@@ -119,9 +137,12 @@
 			<input type="password" placeholder="Senha" />
 			<div class="forgot">Esqueci a senha</div>
 			<button class="btn-login">Entrar</button>
-			<button onclick="openOauthLogin()" class="btn-cloud">
-				Login com Certisign
+			<button onclick="openOauthLogin('hml')" class="btn-cloud">
+				Login com Certisign - HML
 			</button>
+			<!-- <button onclick="openOauthLogin('prod')" class="btn-cloud">
+				Login com Certisign - PROD
+			</button> -->
 		</div>
 	</body>
 </html>
