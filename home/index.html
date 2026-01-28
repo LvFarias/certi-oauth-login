@@ -141,9 +141,7 @@
 				XHR.send();
 				XHR.onreadystatechange = function () {
 					if (XHR.readyState == 4) {
-						console.log(XHR.status);
 						if (XHR.status == 200) {
-							console.log(XHR.responseText);
 							const certificate = JSON.parse(XHR.responseText);
 							document.getElementById(
 								'certificate-loading',
@@ -212,8 +210,8 @@
 								'signature-detail',
 							).innerHTML = `
 								${result?.message}<br>
-								Assinado com: ${result?.certificate_alias}<br>
-								Documento: ${result?.signatures?.[0]?.id}
+								${result?.certificate_alias ? ('Assinado com:' + result?.certificate_alias + '<br>') : ''}
+								${result?.signatures?.[0]?.id ? ('Documento:' + result?.signatures?.[0]?.id) : ''}
 							`;
 							document.getElementById(
 								'signature-detail',
