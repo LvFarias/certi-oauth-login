@@ -130,17 +130,20 @@
 				const vars = JSON.parse(
 					localStorage.getItem('envVars') || '{}',
 				);
-				XHR = new XMLHttpRequest();
+				var XHR = new XMLHttpRequest();
 				XHR.open(
 					'GET',
 					`${vars.baseUrl}/api/emr-digital-signature/certificate`,
 					true,
 				);
 				XHR.setRequestHeader('Authorization', 'Bearer ' + token);
+				XHR.setRequestHeader('content-type', 'application/json');
 				XHR.send();
 				XHR.onreadystatechange = function () {
 					if (XHR.readyState == 4) {
+						console.log(XHR.status);
 						if (XHR.status == 200) {
+							console.log(XHR.responseText);
 							const certificate = JSON.parse(XHR.responseText);
 							document.getElementById(
 								'certificate-loading',
@@ -177,13 +180,14 @@
 				const vars = JSON.parse(
 					localStorage.getItem('envVars') || '{}',
 				);
-				XHR = new XMLHttpRequest();
+				var XHR = new XMLHttpRequest();
 				XHR.open(
 					'POST',
 					`${vars.baseUrl}/api/emr-digital-signature/signature`,
 					true,
 				);
 				XHR.setRequestHeader('Authorization', 'Bearer ' + token);
+				XHR.setRequestHeader('content-type', 'application/json');
 				var body = {
 					signature_format: 'DETACHED',
 					signature_policy: 'CMS',
@@ -243,12 +247,13 @@
 				const vars = JSON.parse(
 					localStorage.getItem('envVars') || '{}',
 				);
-				XHR = new XMLHttpRequest();
+				var XHR = new XMLHttpRequest();
 				XHR.open(
 					'POST',
 					`${vars.baseUrl}/api/emr-digital-signature/validate`,
 					true,
 				);
+				XHR.setRequestHeader('content-type', 'application/json');
 				var body = {
 					client_id: vars.clientId,
 					signature_format: 'DETACHED',
@@ -273,7 +278,7 @@
 							).style.display = 'none';
 							document.getElementById('validate-detail').textContent =
 								`
-								${result?.status == 'SUCCESS' ? 'Assinatura válidada com sucesso' : 'Erro ao validar assinatura'}
+								${result?.[0]?.status == 'SUCCESS' ? 'Assinatura válidada com sucesso' : 'Erro ao validar assinatura'}
 							`;
 							document.getElementById(
 								'validate-detail',
@@ -307,8 +312,8 @@
 				document.getElementById('certificateId').textContent =
 					userInfos.certificateId;
 
-				getCertificate(userInfos.token);
-				signingDocument(userInfos.token);
+				getCertificate(userInfos.authToken);
+				signingDocument(userInfos.authToken);
 			};
 		</script>
 	</body>
