@@ -70,7 +70,7 @@
 				background: #0abab5;
 			}
 			.btn-login:hover {
-				background: #089f9a;
+				background: #09ABA6;
 			}
 			.forgot {
 				cursor: pointer;
@@ -84,7 +84,14 @@
 				background: #8a05be;
 			}
 			.btn-cloud:hover {
-				background: #6b0495;
+				background: #7F04AF;
+			}
+			.btn-cloud.btn-prod {
+				color: #0e0114;
+				background: #cfa904;
+			}
+			.btn-cloud.btn-prod:hover {
+				background: #BE9C04;
 			}
 			@keyframes fadeIn {
 				from {
@@ -97,17 +104,35 @@
 		</style>
 		<script>
 			const VARS = {
-				hml: {
+				hmlLegado: {
 					baseUrl: 'https://remoteidcertisign-homolog.com.br',
+					oauthUrl: 'https://remoteidcertisign-homolog.com.br/api/v0/oauth/authorize',
 					clientId: 'fc8d6b5d-219f-447e-9dba-0a41e961fd9e',
 					clientSecret: 'TLT1oal4Kwyk83P5P8q5cLlHcukki6H4',
 					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
 					codeVerifier: '1234',
 				},
-				prod: {
+				hmlNovo: {
+					baseUrl: 'https://remoteidcertisign-homolog.com.br',
+					oauthUrl: 'https://remote-api-hmg.certisign.com.br/api/v1/oauth/authorize',
+					clientId: 'fc8d6b5d-219f-447e-9dba-0a41e961fd9e',
+					clientSecret: 'TLT1oal4Kwyk83P5P8q5cLlHcukki6H4',
+					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
+					codeVerifier: '1234',
+				},
+				prodLegado: {
 					baseUrl: 'https://remoteidcertisign.com.br',
-					clientId: '66977973-f4a2-4644-8c00-579f9c1d30ae',
-					clientSecret: 'anNtK5j2H2fUwxt0wxiSBNf7nsGV/ZFQ',
+					oauthUrl: 'https://remoteidcertisign.com.br/api/v0/oauth/authorize',
+					clientId: '311e5a69-d0d2-4fab-9a00-6b1ded68d70d',
+					clientSecret: 'wiS9M+WqvYyrSzzuncrrSvjjrO3l0x6G',
+					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
+					codeVerifier: '1234',
+				},
+				prodNovo: {
+					baseUrl: 'https://remoteidcertisign.com.br',
+					oauthUrl: 'https://remote-api.certisign.com.br/api/v1/oauth/authorize',
+					clientId: '311e5a69-d0d2-4fab-9a00-6b1ded68d70d',
+					clientSecret: 'wiS9M+WqvYyrSzzuncrrSvjjrO3l0x6G',
 					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
 					codeVerifier: '1234',
 				}
@@ -115,7 +140,7 @@
 
 			function openOauthLogin(env) {
 				localStorage.setItem('envVars', JSON.stringify(VARS[env]));
-				const url = `${VARS[env].baseUrl}/api/v0/oauth/authorize`;
+				const url = `${VARS[env].oauthUrl}`;
 				const params = new URLSearchParams({
 					state: 'login_info',
 					response_type: 'code',
@@ -137,12 +162,18 @@
 			<input type="password" placeholder="Senha" />
 			<div class="forgot">Esqueci a senha</div>
 			<button class="btn-login">Entrar</button>
-			<button onclick="openOauthLogin('hml')" class="btn-cloud">
-				Login com Certisign - HML
+			<button onclick="openOauthLogin('hmlLegado')" class="btn-cloud">
+				Login HML - Legado
 			</button>
-			<!-- <button onclick="openOauthLogin('prod')" class="btn-cloud">
-				Login com Certisign - PROD
-			</button> -->
+			<button onclick="openOauthLogin('hmlNovo')" class="btn-cloud">
+				Login HML - Novo
+			</button>
+			<button onclick="openOauthLogin('prodLegado')" class="btn-cloud btn-prod">
+				Login PROD - Legado
+			</button>
+			<button onclick="openOauthLogin('prodNovo')" class="btn-cloud btn-prod">
+				Login PROD - Novo
+			</button>
 		</div>
 	</body>
 </html>
