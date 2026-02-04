@@ -107,8 +107,8 @@
 				hmlLegado: {
 					baseUrl: 'https://remoteidcertisign-homolog.com.br',
 					oauthUrl: 'https://remoteidcertisign-homolog.com.br/api/v0/oauth/authorize',
-					clientId: 'fc8d6b5d-219f-447e-9dba-0a41e961fd9e',
-					clientSecret: 'TLT1oal4Kwyk83P5P8q5cLlHcukki6H4',
+					clientId: 'da5498e2-56e6-4dee-8027-2d5e016fbbac',
+					clientSecret: 'j9AFXUm05HF1m1nN8dhDlUFaHaZstQBx',
 					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
 					codeVerifier: '1234',
 				},
@@ -123,8 +123,8 @@
 				prodLegado: {
 					baseUrl: 'https://remoteidcertisign.com.br',
 					oauthUrl: 'https://remoteidcertisign.com.br/api/v0/oauth/authorize',
-					clientId: '311e5a69-d0d2-4fab-9a00-6b1ded68d70d',
-					clientSecret: 'wiS9M+WqvYyrSzzuncrrSvjjrO3l0x6G',
+					clientId: '8afdd3cf-b56f-47d1-8471-ffda87bf9f68',
+					clientSecret: 'Izr3/tTols5nQB7eEawfP7AcmgouyvSH',
 					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
 					codeVerifier: '1234',
 				},
@@ -148,6 +148,7 @@
 					code_challenge_method: 'S256',
 					client_id: VARS[env].clientId,
 					code_challenge: VARS[env].codeChallenge,
+					// redirect_uri: `http://localhost:3200/oauth-callback`,
 					redirect_uri: `https://lvfarias.github.io/certi-oauth-login/oauth-callback`,
 				});
 
