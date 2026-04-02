@@ -104,51 +104,19 @@
 		</style>
 		<script>
 			const VARS = {
-				hmlTasy: {
-					baseUrl: 'https://certieduchmg.remoteidcertisign-homolog.com.br',
-					oauthUrl: 'https://certieduchmg.remoteidcertisign-homolog.com.br/api/emr-digital-signature/authorize',
-					clientId: 'fdaee120-7963-4615-9086-8cae9fd1cc82',
-					clientSecret: 'SOs0Au1pwEf41co5WO2tL9MEU85Se3uM',
-					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
-					codeVerifier: '1234',
-				},
-				hmlLegado: {
+				hml: {
 					baseUrl: 'https://remoteidcertisign-homolog.com.br',
 					oauthUrl: 'https://remoteidcertisign-homolog.com.br/api/v0/oauth/authorize',
-					clientId: 'da5498e2-56e6-4dee-8027-2d5e016fbbac',
-					clientSecret: 'j9AFXUm05HF1m1nN8dhDlUFaHaZstQBx',
+					clientId: 'fc8d6b5d-219f-447e-9dba-0a41e961fd9e',
+					clientSecret: 'TLT1oal4Kwyk83P5P8q5cLlHcukki6H4',
 					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
 					codeVerifier: '1234',
 				},
-				hmlNovo: {
-					baseUrl: 'https://remoteidcertisign-homolog.com.br',
-					oauthUrl: 'https://remote-api-hmg.certisign.com.br/api/v1/oauth/authorize',
-					clientId: 'da5498e2-56e6-4dee-8027-2d5e016fbbac',
-					clientSecret: 'j9AFXUm05HF1m1nN8dhDlUFaHaZstQBx',
-					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
-					codeVerifier: '1234',
-				},
-				prodTasy: {
-					baseUrl: 'https://unimedsccriciuma.remoteidcertisign.com.br',
-					oauthUrl: 'https://unimedsccriciuma.remoteidcertisign.com.br/api/emr-digital-signature/authorize',
-					clientId: '036b0310-9fe3-4f5c-bf5a-c863f0e2d2ef',
-					clientSecret: 'eKJb35K0DD4AvL46riUe7QA%2BvzbByLpW',
-					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
-					codeVerifier: '1234',
-				},
-				prodLegado: {
+				prod: {
 					baseUrl: 'https://remoteidcertisign.com.br',
 					oauthUrl: 'https://remoteidcertisign.com.br/api/v0/oauth/authorize',
-					clientId: '8afdd3cf-b56f-47d1-8471-ffda87bf9f68',
-					clientSecret: 'Izr3/tTols5nQB7eEawfP7AcmgouyvSH',
-					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
-					codeVerifier: '1234',
-				},
-				prodNovo: {
-					baseUrl: 'https://remoteidcertisign.com.br',
-					oauthUrl: 'https://remote-api.certisign.com.br/api/v1/oauth/authorize',
-					clientId: '8afdd3cf-b56f-47d1-8471-ffda87bf9f68',
-					clientSecret: 'Izr3/tTols5nQB7eEawfP7AcmgouyvSH',
+					clientId: '311e5a69-d0d2-4fab-9a00-6b1ded68d70d',
+					clientSecret: 'wiS9M+WqvYyrSzzuncrrSvjjrO3l0x6G',
 					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
 					codeVerifier: '1234',
 				}
@@ -178,23 +146,11 @@
 			<input type="email" disabled="true" placeholder="Email" />
 			<input type="password" disabled="true" placeholder="Senha" />
 			<button class="btn-login" disabled="true">Entrar</button>
-			<button onclick="openOauthLogin('hmlTasy')" class="btn-cloud">
-				Login HML - Tasy2.0
+			<button onclick="openOauthLogin('hml')" class="btn-cloud">
+				Login HML
 			</button>
-			<button onclick="openOauthLogin('hmlLegado')" class="btn-cloud">
-				Login HML - Legado
-			</button>
-			<button onclick="openOauthLogin('hmlNovo')" class="btn-cloud">
-				Login HML - Novo
-			</button>
-			<button onclick="openOauthLogin('prodTasy')" class="btn-cloud btn-prod">
-				Login PROD - Legado
-			</button>
-			<button onclick="openOauthLogin('prodLegado')" class="btn-cloud btn-prod">
-				Login PROD - Tasy2.0
-			</button>
-			<button onclick="openOauthLogin('prodNovo')" class="btn-cloud btn-prod">
-				Login PROD - Novo
+			<button onclick="openOauthLogin('prod')" class="btn-cloud btn-prod">
+				Login PROD
 			</button>
 		</div>
 	</body>
