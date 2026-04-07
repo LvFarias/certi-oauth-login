@@ -98,7 +98,7 @@
 
 				try {
 					const vars = JSON.parse(localStorage.getItem('envVars') || '{}');
-					const tokenUrl = new URL(`${vars.baseUrl}/api/v0/oauth/token`);
+					const tokenUrl = new URL(`${vars.tokenUrl}`);
 					tokenUrl.searchParams.append('code', code);
 					tokenUrl.searchParams.append('code_verifier', vars.codeVerifier);
 					tokenUrl.searchParams.append(

@@ -105,20 +105,30 @@
 		<script>
 			const VARS = {
 				hml: {
-					baseUrl: 'https://remoteidcertisign-homolog.com.br',
-					oauthUrl: 'https://remoteidcertisign-homolog.com.br/api/v0/oauth/authorize',
-					clientId: 'fc8d6b5d-219f-447e-9dba-0a41e961fd9e',
-					clientSecret: 'TLT1oal4Kwyk83P5P8q5cLlHcukki6H4',
+					baseUrl: 'https://certieduc.remoteidcertisign-homolog.com.br',
+					useTasy2: true,
+					clientId: 'fdaee120-7963-4615-9086-8cae9fd1cc82',
+					clientSecret: 'SOs0Au1pwEf41co5WO2tL9MEU85Se3uM',
 					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
 					codeVerifier: '1234',
 				},
 				prod: {
 					baseUrl: 'https://remoteidcertisign.com.br',
-					oauthUrl: 'https://remoteidcertisign.com.br/api/v0/oauth/authorize',
+					useTasy2: false,
 					clientId: '311e5a69-d0d2-4fab-9a00-6b1ded68d70d',
 					clientSecret: 'wiS9M+WqvYyrSzzuncrrSvjjrO3l0x6G',
 					codeChallenge: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ',
 					codeVerifier: '1234',
+				}
+			};
+			for (const env in VARS) {
+				const vars = VARS[env];
+				if (vars.useTasy2) {
+					vars.tokenUrl = `${vars.baseUrl}/api/emr-digital-signature/token`;
+					vars.oauthUrl = `${vars.baseUrl}/api/emr-digital-signature/authorize`;
+				} else {
+					vars.tokenUrl = `${vars.baseUrl}/api/v0/oauth/token`;
+					vars.oauthUrl = `${vars.baseUrl}/api/v0/oauth/authorize`;
 				}
 			}
 
